@@ -3,6 +3,7 @@ var inquirer = require("inquirer");
 var Twitter = require('twitter');
 var Spotify = require('node-spotify-api');
 var fs = require("fs");
+var log = ""
 var Keys = require("./keys.js")
 
 var client = new Twitter(
@@ -29,7 +30,8 @@ function showTweets() {
 	client.get('statuses/user_timeline', params, function(error, tweets, response) {
 		if (!error) {
 			for (var i = 0; i < tweets.length; i++) {
-				console.log("On " + tweets[i].created_at + " @MyClassTime said: " + tweets[i].text)
+				var tweetOutput = "On " + tweets[i].created_at + " @MyClassTime said: " + tweets[i].text
+				console.log(tweetOutput)
 			}
 		}
 		else {
