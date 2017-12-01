@@ -28,16 +28,20 @@ function doWhatItSays() {
 function showTweets() {
 	var params = { screen_name: 'MyClassTime', count: 20 };
 	client.get('statuses/user_timeline', params, function(error, tweets, response) {
+
+		fs.appendFile("log.txt", "\n****** Showing Tweets ******")
 		if (!error) {
 			for (var i = 0; i < tweets.length; i++) {
 				var tweetOutput = "On " + tweets[i].created_at + " @MyClassTime said: " + tweets[i].text
-				console.log(tweetOutput)
+				console.log(tweetOutput);
+				fs.appendFile("log.txt", "\n" + tweetOutput)
 			}
 		}
 		else {
 			console.log("something is wrong")
 		}
-	});
+		fs.appendFile("log.txt", "\n")
+	})
 }
 
 function showSpotify(userSongChoice) {
@@ -53,10 +57,18 @@ function showSpotify(userSongChoice) {
 			return console.log('Error occurred: ' + err);
 		}
 		// console.log(data)
-		console.log("Artist name: " + JSON.stringify(data.tracks.items[0].artists[0].name));
-		console.log("Song name: " + JSON.stringify(data.tracks.items[0].name))
-		console.log("Album name: " + JSON.stringify(data.tracks.items[0].album.name))
-		console.log("A preview can be found here: " + JSON.stringify(data.tracks.items[0].external_urls.spotify))
+		var spotifyOutput = [
+			"Artist name: " + JSON.stringify(data.tracks.items[0].artists[0].name),
+			"Song name: " + JSON.stringify(data.tracks.items[0].name),
+			"Song name: " + JSON.stringify(data.tracks.items[0].name),
+			"A preview can be found here: " + JSON.stringify(data.tracks.items[0].external_urls.spotify)
+		]
+		console.log(spotifyOutput.join("\n"))
+		fs.appendFile("log.txt", "\n****** Spotify search for: " + userSongChoice + " ******\n" + spotifyOutput.join("\n") + "\n ", function(err) {
+			if (err) {
+				console.log(err);
+			}
+		});
 	});
 }
 
@@ -70,14 +82,24 @@ function showOMDB(movieName) {
 
 	request(queryUrl, function(error, response, body) {
 		if (!error && response.statusCode === 200) {
-			console.log("Title: " + JSON.parse(body).Title);
-			console.log("Release Year: " + JSON.parse(body).Year);
-			console.log("IMDB rating: " + JSON.parse(body).Ratings[0].Value);
-			console.log("Rotten Tomatoes rating: " + JSON.parse(body).Ratings[1].Value);
-			console.log("Country: " + JSON.parse(body).Country);
-			console.log("Language: " + JSON.parse(body).Language);
-			console.log("Plot: " + JSON.parse(body).Plot);
-			console.log("Actors: " + JSON.parse(body).Actors);
+			var OMDBOutput = [
+				"Title: " + JSON.parse(body).Title,
+				"Release Year: " + JSON.parse(body).Year,
+				"IMDB rating: " + JSON.parse(body).Ratings[0].Value,
+				"Rotten Tomatoes rating: " + JSON.parse(body).Ratings[1].Value,
+				"Country: " + JSON.parse(body).Country,
+				"Language: " + JSON.parse(body).Language,
+				"Plot: " + JSON.parse(body).Plot,
+				"Actors: " + JSON.parse(body).Actors
+			]
+			console.log(OMDBOutput.join("\n"))
+
+			//Logging
+			fs.appendFile("log.txt", "\n****** OMDB search for: " + movieName + " ******\n" + OMDBOutput.join("\n") + "\n ", function(err) {
+				if (err) {
+					console.log(err);
+				}
+			});
 		}
 	});
 }
