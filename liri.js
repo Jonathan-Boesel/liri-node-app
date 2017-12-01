@@ -3,7 +3,6 @@ var inquirer = require("inquirer");
 var Twitter = require('twitter');
 var Spotify = require('node-spotify-api');
 var fs = require("fs");
-var log = ""
 var Keys = require("./keys.js")
 
 var client = new Twitter(
